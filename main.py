@@ -47,14 +47,14 @@ def get_film_names(url):
     return films
 
 page_no = 1
-# while True:
-#     url = BASE_URL + "/page/" + str(page_no)
-#     film_names = get_film_names(url)
-#     all_films.extend(film_names)
-#     print(f"Scraping page {page_no}: {len(film_names)} films found")
-#     if len(film_names) == 0:
-#         break
-#     page_no += 1
+while True:
+    url = BASE_URL + "/page/" + str(page_no)
+    film_names = get_film_names(url)
+    all_films.extend(film_names)
+    print(f"Scraping page {page_no}: {len(film_names)} films found")
+    if len(film_names) == 0:
+        break
+    page_no += 1
 
 def get_movie_info(movie_name, year):
     url = "https://api.themoviedb.org/3/search/movie"
