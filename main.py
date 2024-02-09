@@ -33,8 +33,6 @@ TMDB_HEADERS = {
 all_films = []
 
 def get_film_names(url):
-    if "/detail/" not in url:
-        url += "detail/"
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
     film_details = soup.find_all("div", class_="film-detail-content")
@@ -48,6 +46,8 @@ def get_film_names(url):
 
 page_no = 1
 while True:
+    if "/detail/" not in BASE_URL:
+        BASE_URL += "detail/"
     url = BASE_URL + "/page/" + str(page_no)
     film_names = get_film_names(url)
     all_films.extend(film_names)
