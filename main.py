@@ -5,18 +5,23 @@ from dotenv import load_dotenv
 import os
 import requests
 from urllib.parse import urlparse
+import sys 
 
 load_dotenv()
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
+
 BASE_URL = "https://letterboxd.com/fcbarcelona/list/movies-everyone-should-watch-at-least-once/detail/"
+
+if len(sys.argv) > 1:
+    BASE_URL = sys.argv[1]
 
 parsed_url = urlparse(BASE_URL)
 LIST_NAME = parsed_url.path.split('/')[3]
 
 curr_directory = os.path.dirname(os.path.abspath(__file__))
-list_directory = os.path.join(curr_directory, LIST_NAME)
+list_directory = os.path.join(curr_directory, 'lists', LIST_NAME)
 os.makedirs(list_directory, exist_ok=True)
 
 
@@ -42,14 +47,14 @@ def get_film_names(url):
     return films
 
 page_no = 1
-while True:
-    url = BASE_URL + "/page/" + str(page_no)
-    film_names = get_film_names(url)
-    all_films.extend(film_names)
-    print(f"Scraping page {page_no}: {len(film_names)} films found")
-    if len(film_names) == 0:
-        break
-    page_no += 1
+# while True:
+#     url = BASE_URL + "/page/" + str(page_no)
+#     film_names = get_film_names(url)
+#     all_films.extend(film_names)
+#     print(f"Scraping page {page_no}: {len(film_names)} films found")
+#     if len(film_names) == 0:
+#         break
+#     page_no += 1
 
 def get_movie_info(movie_name, year):
     url = "https://api.themoviedb.org/3/search/movie"
@@ -107,7 +112,7 @@ os.makedirs(providers_directory, exist_ok=True)
 def filter_movies_by_provider(provider):
     parsed_provider_name = provider.replace(" ", "_")
 
-    single_provider_directory = os.path.join(providers_directory, parsed_provider_name)
+    single_provider_directory = os.path.join(providers_directory, parsed_provider_name + ".csv")
 
     with open( movie_list_csv_file_path, 'r') as input_file, open(single_provider_directory, 'w', newline='') as output_file:
         reader = csv.reader(input_file)
