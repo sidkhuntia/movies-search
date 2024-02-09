@@ -68,10 +68,8 @@ def get_movie_info(movie_name, year):
     }
     response = requests.get(url, headers=headers, params=params)
     response_json = response.json()
-    results = response_json['results']
-    if len(results) > 0:
-        movie_id = results[0]['id']
-        return movie_id
+    if 'results' in response_json and len(response_json['results']) > 0:
+        return response_json['results'][0]['id']
     return None
 
 def get_movie_providers(movie_id):
@@ -79,13 +77,13 @@ def get_movie_providers(movie_id):
     headers = TMDB_HEADERS
     response = requests.get(url, headers=headers)
     response_json = response.json()
-    providers = response_json['results']
-    if 'IN' in providers:
-        providers_in_india = providers['IN']
-        if 'flatrate' in providers_in_india:
-            stream = providers_in_india['flatrate']
-            provider_list = [provider['provider_name'] for provider in stream]
-            return provider_list
+    if 'results' in response_json:
+        if 'IN' in providers:
+            providers_in_india = providers['IN']
+            if 'flatrate' in providers_in_india:
+                stream = providers_in_india['flatrate']
+                provider_list = [provider['provider_name'] for provider in stream]
+                return provider_list
     return []
 
 providers_names = []
