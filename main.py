@@ -78,6 +78,7 @@ def get_movie_providers(movie_id):
     response = requests.get(url, headers=headers)
     response_json = response.json()
     if 'results' in response_json:
+        providers = response_json['results']
         if 'IN' in providers:
             providers_in_india = providers['IN']
             if 'flatrate' in providers_in_india:
