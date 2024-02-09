@@ -4,12 +4,21 @@ import csv
 from dotenv import load_dotenv
 import os
 import requests
+from urllib.parse import urlparse
 
 load_dotenv()
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
 BASE_URL = "https://letterboxd.com/fcbarcelona/list/movies-everyone-should-watch-at-least-once/detail/"
+
+parsed_url = urlparse(BASE_URL)
+LIST_NAME = parsed_url.path.split('/')[3]
+
+curr_directory = os.path.dirname(os.path.abspath(__file__))
+list_directory = os.path.join(curr_directory, LIST_NAME)
+os.makedirs(list_directory, exist_ok=True)
+
 
 TMDB_HEADERS = {
     'Authorization': 'Bearer ' + TMDB_API_KEY,
@@ -75,8 +84,9 @@ def get_movie_providers(movie_id):
     return []
 
 providers_names = []
+movie_list_csv_file_path = os.path.join(list_directory, 'movie_providers_complete_list.csv')
 
-with open('movie_providers.csv', 'w', newline='') as file:
+with open(movie_list_csv_file_path, 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["Film Name", "Year", "Providers"])
     for film in all_films:
@@ -89,9 +99,16 @@ with open('movie_providers.csv', 'w', newline='') as file:
         writer.writerow([film_name, film_year, ', '.join(providers)])
         print(f"Added movie: {film_name} ({film_year})")
 
+
+providers_directory = os.path.join(list_directory, 'providers')
+os.makedirs(providers_directory, exist_ok=True)
+
 def filter_movies_by_provider(provider):
     parsed_provider_name = provider.replace(" ", "_")
-    with open('movie_providers.csv', 'r') as input_file, open(f'movies_on_{parsed_provider_name}.csv', 'w', newline='') as output_file:
+
+    single_provider_directory = os.path.join(providers_directory, parsed_provider_name)
+
+    with open( movie_list_csv_file_path, 'r') as input_file, open(single_provider_directory, 'w', newline='') as output_file:
         reader = csv.reader(input_file)
         writer = csv.writer(output_file)
         writer.writerow(['Film Name', 'Year', 'Rank'])
