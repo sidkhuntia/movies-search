@@ -90,7 +90,8 @@ with open('movie_providers.csv', 'w', newline='') as file:
         print(f"Added movie: {film_name} ({film_year})")
 
 def filter_movies_by_provider(provider):
-    with open('movie_providers.csv', 'r') as input_file, open(f'movies_on_{provider}.csv', 'w', newline='') as output_file:
+    parsed_provider_name = provider.replace(" ", "_")
+    with open('movie_providers.csv', 'r') as input_file, open(f'movies_on_{parsed_provider_name}.csv', 'w', newline='') as output_file:
         reader = csv.reader(input_file)
         writer = csv.writer(output_file)
         writer.writerow(['Film Name', 'Year', 'Rank'])
@@ -100,5 +101,4 @@ def filter_movies_by_provider(provider):
                 writer.writerow([row[0], row[1], i])
 
 for provider in providers_names:
-    parsed_provider_name = provider.replace(" ", "_")
-    filter_movies_by_provider(parsed_provider_name)
+    filter_movies_by_provider(provider)
