@@ -46,7 +46,7 @@ while True:
     url = BASE_URL + "/page/" + str(page_no)
     film_names = get_film_names(url)
     all_films.extend(film_names)
-    print(str(page_no) + " : " + str(len(film_names)))
+    print(f"Scraping page {page_no}: {len(film_names)} films found")
     if len(film_names) == 0:
         break
     page_no += 1
@@ -99,6 +99,7 @@ with open(movie_list_csv_file_path, 'w', newline='') as file:
         writer.writerow([film_name, film_year, ', '.join(providers)])
         print(f"Added movie: {film_name} ({film_year})")
 
+print("Movie list with providers has been created successfully.")
 
 providers_directory = os.path.join(list_directory, 'providers')
 os.makedirs(providers_directory, exist_ok=True)
@@ -119,3 +120,5 @@ def filter_movies_by_provider(provider):
 
 for provider in providers_names:
     filter_movies_by_provider(provider)
+
+print("Movies have been filtered by providers successfully.")
