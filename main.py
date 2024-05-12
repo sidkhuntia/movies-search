@@ -55,7 +55,7 @@ while True:
     if len(film_names) == 0:
         break
     page_no += 1
-
+state = 1
 def get_movie_info(movie_name, year):
     url = "https://api.themoviedb.org/3/search/movie"
     headers = TMDB_HEADERS
@@ -67,6 +67,7 @@ def get_movie_info(movie_name, year):
         'year': year
     }
     response = requests.get(url, headers=headers, params=params)
+    print(response)
     response_json = response.json()
     if 'results' in response_json and len(response_json['results']) > 0:
         return response_json['results'][0]['id']
